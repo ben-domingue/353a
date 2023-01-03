@@ -1,14 +1,13 @@
-##Goal
-##1. Make sense of how to simulate item response data
-##2. See connection with logistic regression when theta is known.
+##going to use  simulation code similar to in last example. feel free to omit code between large comment bars
 
-################################################################
-##first, we're going to simulate some data
-
+#################################################################################################
+#################################################################################################
+#################################################################################################
+#################################################################################################
 ##number of items and people.
 ##we'll start small just so that you can see everything, but you'll want to make this bigger downstream.
-ni<-30
-np<-2000
+ni<-20
+np<-200
 ##now we're going to simulate data according to this model and examine some key properties
 set.seed(12311)
 ##first let's describe the individual level part of the model
@@ -34,8 +33,29 @@ pr<-inv_logit(a.mat*(th.mat+b.mat)) #note this is pairwise multiplication not ma
 resp<-pr
 for (i in 1:ncol(resp)) resp[,i]<-rbinom(nrow(resp),1,resp[,i])
 
-
-##so let's estimate parameters 
+#################################################################################################
+#################################################################################################
+#################################################################################################
+#################################################################################################
+##now let's consider 2 ways of estimating ability
 library(mirt)
 mod<-mirt(data.frame(resp),1,itemtype="2PL")
-plot(mod,type='trace')
+th1<-fscores(mod)
+
+##via ML after we get item parameters from mirt
+loglik.2pl<-function(th,x,a,b) {
+    p<-1/(1+exp(-1*(a*th-b)))
+    q<-1-p
+    -1*sum(x*log(p)+(1-x)*log(q)) #to get maxim from optim
+}
+co<-coef(mod)
+co<-co[-length(co)]
+co<-do.call("rbind",co)
+a<-co[,1]
+b<- -1*co[,2]
+th2<-numeric()
+for (i in 1:nrow(resp)) th2[i]<-optim(0,loglik.2pl,x=resp[i,],a=a,b=b,method="Brent",lower=-5,upper=5)$par
+
+z<-data.frame(true=th,th.mirt=th1,th.ml=th2)
+plot(z)
+
