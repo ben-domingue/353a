@@ -59,3 +59,7 @@ for (i in 1:nrow(resp)) th2[i]<-optim(0,loglik.2pl,x=resp[i,],a=a,b=b,method="Br
 z<-data.frame(true=th,th.mirt=th1,th.ml=th2)
 plot(z)
 
+mod<-mirt(data.frame(resp),1,itemtype="2PL")
+z$th3<-fscores(mod,'ML')
+plot(z)
+
