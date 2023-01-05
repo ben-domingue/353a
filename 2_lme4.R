@@ -8,7 +8,7 @@
 ##number of items and people.
 ##we'll start small just so that you can see everything, but you'll want to make this bigger downstream.
 ni<-20
-np<-1000
+np<-500
 ##now we're going to simulate data according to this model and examine some key properties
 set.seed(12311)
 ##first let's describe the individual level part of the model
@@ -52,4 +52,20 @@ for (i in 1:ncol(resp)) {
 }
 df<-data.frame(do.call("rbind",df))
 names(df)<-c("person","item","resp")
-m1<-glmer(resp~as.character(item)+(1|person),family='binomial',df)
+m1<-glmer(resp~0+as.character(item)+(1|person),family='binomial',df)
+
+##compare
+par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
+##item part
+co<-coef(m0)
+co<-co[-length(co)]
+co<-do.call("rbind",co)
+fe<-fixef(m1)
+nms<-gsub("as.character(item)","",names(fe),fixed=TRUE)
+fe<-fe[order(as.numeric(nms))]
+plot(co[,2],fe,xlab='mirt item param',ylab='lme4 item param'); abline(0,1)
+##person part
+th.mirt<-fscores(m0)
+th.lmer<-ranef(m1)
+plot(jitter(th.mirt[,1]),jitter(th.lmer[[1]][,1]),xlab='mirt theta',ylab='lme4 theta'); abline(0,1)
+
