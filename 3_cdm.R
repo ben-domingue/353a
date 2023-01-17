@@ -7,6 +7,10 @@ m <- GDINA(frac20$dat,frac20$Q,model="DINA")
 coef(m)
 coef(m,what='lambda')
 
+co<-coef(m,what='delta')
+co<-do.call("rbind",co)
+plot(data.frame(cbind(colMeans(frac20$dat),co)))
+
 map <- personparm(m, what = "MAP")
 map[1:5,]
 
