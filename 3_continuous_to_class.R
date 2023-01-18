@@ -15,7 +15,7 @@ for (i in 1:length(b)) {
     tmp[1:levs[i]]<-1
     Q[[i]]<-tmp
 }
-Q<-do.call("rbind",Q)
+Q<-do.call("rbind",Q) #note the structure of Q
 
 library(GDINA)
 m <- GDINA(resp,Q,model="DINA")
@@ -28,4 +28,6 @@ co<-do.call("rbind",co)
 plot(data.frame(cbind(b,co)))
 
 map <- personparm(m, what = "MAP")
-colMeans(map)
+z<-apply(map[,1:7],1,function(x) which.max(which(x==1)))
+plot(jitter(z),th)
+

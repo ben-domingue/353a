@@ -19,13 +19,13 @@ map[1:5,]
 rs<-rowSums(frac20$dat)
 L<-split(map,rs)
 z<-sapply(L,colMeans)
-plot(NULL,xlim=range(rs),ylim=0:1)
+plot(NULL,xlim=range(rs),ylim=0:1,xlab='sum scores',ylab='proportion of correct responses by attribute')
 for (i in 1:8) lines(z[i,])
 
 #nonsense Q
+set.seed(10103101)
 Q<-frac20$Q
 for (i in 5:8) Q[,i]<-rbinom(nrow(Q),1,mean(Q[,i],na.rm=TRUE))
 m2 <- GDINA(frac20$dat,Q,model="DINA")
 anova(m,m2)
 
-#can you do something with irt to ask how hierarchical q matirx is?
