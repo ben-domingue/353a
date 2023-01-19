@@ -29,5 +29,13 @@ plot(data.frame(cbind(b,co)))
 
 map <- personparm(m, what = "MAP")
 z<-apply(map[,1:7],1,function(x) which.max(which(x==1)))
-plot(jitter(z),th)
+plot(jitter(z),th,ylab='theta',xlab='max attribute=1')
 
+plot(NULL,xlim=quantile(th,c(.05,.95)),ylim=0:1,xlab='theta',ylab='probability of attribute')
+for (i in 1:ncol(Q)) {
+    m<-loess(map[,i]~th)
+    xv<-cbind(th,predict(m))
+    xv<-xv[order(xv[,1]),]
+    lines(xv)
+    mtext(side=4,at=xv[nrow(xv),2],i)
+}
