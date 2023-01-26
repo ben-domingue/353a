@@ -1,11 +1,9 @@
 #https://cran.r-project.org/web/packages/elo/vignettes/running_elos.html
 
 N<-10
-nweek<-200 #ability will vary linearly acros weeks
+nweek<-200 #ability will vary across weeks
 ngames.week<-(N-1) #each team will play a round robin each week
-#static case
 th0<-rnorm(N,sd=.5)
-#th.grow<-rnorm(N,mean=0,sd=.2)
 th<-list()
 for (i in 1:N) {
     tmp<-c(th0[i],rnorm(nweek-1,mean=0,sd=.3))

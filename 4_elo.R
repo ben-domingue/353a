@@ -1,5 +1,4 @@
-##question to pose in slides: how could you reduce correlation between the elo and theta values?
-
+##question to ponder: how could you reduce correlation between the elo and theta values?
 ##might be interesting to write down what the sum score is for each person (sum of probabilities) and compare that to the key equation in BLT model?
 
 
