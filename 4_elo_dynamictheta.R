@@ -1,13 +1,18 @@
 #https://cran.r-project.org/web/packages/elo/vignettes/running_elos.html
 
-N<-25
-nweek<-100
-ngames.week<-5
+N<-10
+nweek<-200 #ability will vary linearly acros weeks
+ngames.week<-(N-1) #each team will play a round robin each week
 #static case
 th0<-rnorm(N,sd=.5)
-th.grow<-rnorm(N,mean=0,sd=.1)
+#th.grow<-rnorm(N,mean=0,sd=.2)
 th<-list()
-for (i in 1:N) th[[i]]<-th0[i]+th.grow[i]*1:nweek #nweek weeks to mimic structure of tournament data
+for (i in 1:N) {
+    tmp<-c(th0[i],rnorm(nweek-1,mean=0,sd=.3))
+    th[[i]]<-cumsum(tmp)
+}
+names(th)<-paste("team",1:N)
+
 
 getresp<-function(th) {
     a<-1
@@ -22,16 +27,12 @@ getresp<-function(th) {
 
 out<-list()
 for (i in 1:nweek) {
-    for (ng in 1:ngames.week) {
-        test<-TRUE
-        while (test) {
-            index<-sample(1:N)
-            test<-any(index==1:N)
-        }
-        for (j in 1:N) {
+    for (j in 1:N) {
+        index<-sample((1:N)[-j],ngames.week)
+        for (index.tmp in index) {
             th1<-getresp(th[[j]][i])
-            th2<-getresp(th[[index[j]]][i])
-            out[[paste(i,j,ng)]]<-data.frame(team.Home=j,team.Visitor=index[j],points.Home=th1,points.Visitor=th2,week=i)
+            th2<-getresp(th[[index.tmp]][i])
+            out[[paste(i,j,index.tmp)]]<-data.frame(team.Home=j,team.Visitor=index.tmp,points.Home=th1,points.Visitor=th2,week=i)
         }
     }
 }
@@ -43,7 +44,7 @@ library(elo)
 m<-elo.run(score(points.Home, points.Visitor) ~ team.Home + team.Visitor +group(week),
               data = df, k = 20)
 est<-as.matrix(m)
-
+est<-est[,names(th)]
 
 M<-mean(unlist(th))
 S<-sd(unlist(th))
@@ -60,3 +61,4 @@ for (i in 1:length(th)) {
     lines(1:nweek,est[,i],col='red')
     rdiff[i]<-cor(th[[i]],est[,i])
 }
+summary(rdiff)
