@@ -1,18 +1,21 @@
 #https://cran.r-project.org/web/packages/elo/vignettes/running_elos.html
+#we're going to give the elo algorithm a relatively hard challenge as ability is going to be pretty unstructured
 
-N<-10
+N<-16 #number of teams
 nweek<-200 #ability will vary across weeks
 ngames.week<-(N-1) #each team will play a round robin each week
-th0<-rnorm(N,sd=.5)
+th0<-rnorm(N,sd=.5) #each team starts with a random ability at the outset
 th<-list()
 for (i in 1:N) {
-    tmp<-c(th0[i],rnorm(nweek-1,mean=0,sd=.3))
+    tmp<-c(th0[i],rnorm(nweek-1,mean=0,sd=.3)) #the team's ability over weeks is a random walk!
     th[[i]]<-cumsum(tmp)
 }
 names(th)<-paste("team",1:N)
 
 
-getresp<-function(th) {
+#we're again going to use an item response model to simulate outcomes.
+#this is completely unnecessary (we could generate it directly from the BLT with the theta values) but i can't help myself :)
+getresp<-function(th) { 
     a<-1
     b<-rnorm(100)
     invlogit<-function(x) 1/(1+exp(-x))
@@ -22,6 +25,7 @@ getresp<-function(th) {
     resp<-rbinom(length(p),1,p)
     rs<-sum(resp)
 }
+##note that we're also throwing away information here when we go from a difference in sum scores to just win/loss! 
 
 out<-list()
 for (i in 1:nweek) {
@@ -51,12 +55,15 @@ M<-mean(est)
 S<-sd(est)
 for (i in 1:ncol(est)) est[,i]<-(est[,i]-M)/S
 
-par(mfrow=c(5,5),mar=rep(0,4),oma=rep(.2,4))
+
+NN<-floor(sqrt(N))+1
+NN2<-ifelse(NN*(NN-1)>N,NN-1,NN)
+par(mfrow=c(NN,NN2),mar=rep(0,4),oma=rep(.2,4))
 rdiff<-numeric()
 for (i in 1:length(th)) {
     plot(NULL,xlim=c(1,nweek),ylim=c(-3,3))
-    lines(1:nweek,th[[i]])
-    lines(1:nweek,est[,i],col='red')
+    lines(1:nweek,th[[i]],lwd=2)
+    lines(1:nweek,est[,i],col='red',lwd=2)
     rdiff[i]<-cor(th[[i]],est[,i])
 }
 summary(rdiff)
