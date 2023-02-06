@@ -72,7 +72,7 @@ a<-1
 np<-5000
 ##
 b0vals<-runif(50,-1,0)
-b1vals<-b0vals+.5+runif(50,0,1)
+b1vals<-b0vals+.5+runif(50,0,3)
 L<-list()
 for (i in 1:length(b0vals)) {
     b<-c(b0vals[i],b1vals[i])
@@ -88,7 +88,8 @@ for (i in 1:length(b0vals)) {
 }
 df<-data.frame(do.call("rbind",L))
 
-par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,1,1))
+
+par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.5,4))
 hist(df$a.est)
 plot(df$b0,df$b0.est); abline(0,1)
 plot(df$b1,df$b1.est); abline(0,1)
