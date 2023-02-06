@@ -1,4 +1,5 @@
-sim<-function(th,delta,eps) { #pcm for 3 cat
+sim<-function(th,delta,eps) { 
+    ##see equations 21.2-21.4 in andrich chapter
     psi<-list()
     psi[[1]]<-rep(1,length(th))
     k<-th-delta+eps

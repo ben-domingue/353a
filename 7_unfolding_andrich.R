@@ -2,7 +2,7 @@ sim<-function(th,delta,rho,resp=FALSE) {
     ##eqn 21.17 in handbook, u=1
     n<-cosh(rho)
     gamma<-cosh(rho)+cosh(th-delta)
-    p<-cosh(rho)/gamma
+    p<-cosh(rho)/gamma 
     if (resp) rbinom(length(p),1,p) else p
 }
 
