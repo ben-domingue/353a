@@ -1,4 +1,4 @@
-sim<-function(th,delta,rho,resp=FALSE) {
+sim<-function(th,delta,rho,resp=FALSE) { #simulate data from andrich's irf
     ##eqn 21.17 in handbook, u=1
     n<-cosh(rho)
     gamma<-cosh(rho)+cosh(th-delta)
@@ -8,16 +8,16 @@ sim<-function(th,delta,rho,resp=FALSE) {
 
 th<-seq(-4,4,length.out=1000)
 y1<-sim(th,delta=0,rho=1)
-plot(th,y1,type='l',ylim=0:1)
+plot(th,y1,type='l',ylim=0:1) #let's make sure this looks ok
 
 lines(th,sim(th,delta=1,rho=1),col='red')
 lines(th,sim(th,delta=0,rho=2),col='blue')
 lines(th,sim(th,delta=0,rho=.2),col='green')
 
 
-th<-rnorm(1000)
+th<-rnorm(1000) #generate a grabbag of thetas
 y<-sim(th,delta=.25,rho=.75,resp=TRUE)
-like<-function(pars,th,resp) {
+like<-function(pars,th,resp) { #a likelihood function we'll use for ML
     delta<-pars[1]
     rho<-pars[2]
     gamma<-cosh(rho)+cosh(th-delta)
@@ -26,9 +26,11 @@ like<-function(pars,th,resp) {
     -sum(log(term1*term2/gamma))
 }
 
-optim(c(0,1),like,th=th,resp=y)
+est<-optim(c(0,1),like,th=th,resp=y) #doing ML
+est$par ##these should match the values we fed to sim()
 
-deltaL<-rnorm(50)
+##let's do this at scale
+deltaL<-rnorm(50) #50 items
 rhoL<-runif(50,min=.25,max=1.25)
 est<-list()
 for (i in 1:length(deltaL)) {
@@ -38,8 +40,8 @@ for (i in 1:length(deltaL)) {
 est<-do.call("rbind",est)
 
 par(mfrow=c(1,2))
-plot(deltaL,est[,1])
-plot(rhoL,est[,2])
+plot(deltaL,est[,1]) #looks good!
+plot(rhoL,est[,2]) #what is going on here?
 
 plot(th,cosh(th),cex=2,pch=19)
 points(th,cosh(-th),col='red',cex=.5)

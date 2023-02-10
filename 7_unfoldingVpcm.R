@@ -1,5 +1,4 @@
-sim<-function(th,delta,eps) { 
-    ##see equations 21.2-21.4 in andrich chapter
+sim<-function(th,delta,eps) {  #note we're goign to simulate from the pcm
     psi<-list()
     psi[[1]]<-rep(1,length(th))
     k<-th-delta+eps
@@ -13,7 +12,10 @@ sim<-function(th,delta,eps) {
     for (i in 1:length(th)) resp[i]<-which(rmultinom(1,1,p[i,])[,1]>0)-1
     resp
 }
+th<-rnorm(1000)
+x<-sim(th,delta=0,eps=1)
 
+##but we'll then estimate via both pcm & andrich unfolding model
 like.pcm<-function(pars,th,resp) {
     delta<-pars[1]
     eps<-pars[2]
@@ -40,7 +42,11 @@ like.andrich<-function(pars,th,resp) {
     term2<-(cosh(th-delta))^(1-resp)
     -sum(log((term1*term2)/gamma))
 }
+est.pcm<-optim(c(0,1),like.pcm,th=th,resp=x)$par
+x2<-ifelse(x==2,0,x) ##note we are throwing info away in the unfolding model
+est.andrich<-optim(c(0,.2),like.andrich,th=th,resp=x2)$par
 
+##let's study what the cost of throwing that info away is. we're going to look at item parameter estimates for a bunch of items and different sample size (N) values. what do you anticipate in terms of (1) the RMSE difference between pcm and unfolding model and (2) the difference as a function of smaple size?
 rmse<-function(x,y) sqrt(mean((x-y)^2))
 out<-list()
 for (N in c(50,100,250,500,1000,10000)) {
