@@ -8,9 +8,13 @@ sim<-function(th,delta,rho,resp=FALSE) { #simulate data from andrich's irf
 
 th<-seq(-4,4,length.out=1000)
 y1<-sim(th,delta=0,rho=1)
-plot(th,y1,type='l',ylim=0:1) #let's make sure this looks ok
+
+plot(th,y1,type='l',ylim=0:1) #let's make sure this looks ok by first just checking out item response functions (pr(x=1) are solid and pr(x=0) are dashed)
+lines(th,1-y1,lty=2)
 
 lines(th,sim(th,delta=1,rho=1),col='red')
+lines(th,1-sim(th,delta=1,rho=1),col='red',lty=2)
+
 lines(th,sim(th,delta=0,rho=2),col='blue')
 lines(th,sim(th,delta=0,rho=.2),col='green')
 
