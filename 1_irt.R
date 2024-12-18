@@ -50,3 +50,12 @@ plot(th,th.est[,1])
 
 
 ##We didn't simulate any guessing behavior. Can you modify above call to mirt to estimate the 3PL and see what it gives you? In particular, what are values for guessing parameters?
+
+
+##################################################
+##Information
+th.seq<-seq(-5,5,length.out=1000)
+iteminfo(mod,th.seq) ##error?
+
+
+##Now let's simulate data based on a different architecture
