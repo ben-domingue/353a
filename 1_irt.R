@@ -34,7 +34,19 @@ for (i in 1:ncol(resp)) resp[,i]<-rbinom(nrow(resp),1,resp[,i])
 ##so let's estimate parameters 
 library(mirt)
 mod<-mirt(data.frame(resp),1,itemtype="2PL")
+
+##Let's first look at parameter estimates
+co<-coef(mod,simplify=TRUE,IRTpars=TRUE)$items
+co
+plot(co[,2],b) #thoughts?
+hist(a)
+
+##We can also plot IRFs:
 plot(mod,type='trace')
+
+##Finally, we can get theta estimates and compare to truth
+th.est<-fscores(mod)
+plot(th,th.est[,1])
 
 
 ##We didn't simulate any guessing behavior. Can you modify above call to mirt to estimate the 3PL and see what it gives you? In particular, what are values for guessing parameters?
