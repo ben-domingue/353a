@@ -46,7 +46,7 @@ plot(mod,type='trace')
 
 ##Finally, we can get theta estimates and compare to truth
 th.est<-fscores(mod)
-plot(th,th.est[,1])
+info0<-plot(th,th.est[,1])
 
 
 ##We didn't simulate any guessing behavior. Can you modify above call to mirt to estimate the 3PL and see what it gives you? In particular, what are values for guessing parameters?
@@ -55,7 +55,31 @@ plot(th,th.est[,1])
 ##################################################
 ##Information
 th.seq<-seq(-5,5,length.out=1000)
-iteminfo(mod,th.seq) ##error?
+info.mod<-testinfo(mod,th.seq)
 
 
-##Now let's simulate data based on a different architecture
+##Now let's simulate data based on different architectures
+sim<-function(b) {
+    b.mat<-matrix(b,np,ni,byrow=TRUE) #these are the item difficulties
+    pr<-inv_logit(a.mat*(th.mat+b.mat)) #note this is pairwise multiplication not matrix multiplication.
+    resp<-pr
+    for (i in 1:ncol(resp)) resp[,i]<-rbinom(nrow(resp),1,resp[,i])
+    library(mirt)
+    mod1<-mirt(data.frame(resp),1,itemtype="2PL")
+    testinfo(mod1,th.seq)
+}
+
+plot(th.seq,info.mod,type='l')
+##
+b<-rnorm(ni,mean=1.5)
+info.1<-sim(b)
+lines(th.seq,info.1,col='red')
+##
+b<-rnorm(ni,mean=-1.5)
+info.2<-sim(b)
+lines(th.seq,info.2,col='green')
+##
+##
+b<-rnorm(ni,mean=0,sd=3)
+info.3<-sim(b)
+lines(th.seq,info.3,col='blue')
