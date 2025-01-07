@@ -36,7 +36,7 @@ library(mirt)
 mod<-mirt(data.frame(resp),1,itemtype="2PL")
 
 ##Let's first look at parameter estimates
-co<-coef(mod,simplify=TRUE,IRTpars=TRUE)$items
+co<-coef(mod,simplify=TRUE)$items
 co
 plot(co[,2],b) #thoughts?
 hist(a)
