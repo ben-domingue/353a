@@ -59,7 +59,8 @@ info.mod<-testinfo(mod,th.seq)
 
 
 ##Now let's simulate data based on different architectures
-sim<-function(b) {
+sim<-function(b,a=1) {
+    a.mat<-matrix(rep(a,np),np,ni,byrow=TRUE)
     b.mat<-matrix(b,np,ni,byrow=TRUE) #these are the item difficulties
     pr<-inv_logit(a.mat*(th.mat+b.mat)) #note this is pairwise multiplication not matrix multiplication.
     resp<-pr
@@ -79,7 +80,10 @@ b<-rnorm(ni,mean=-1.5)
 info.2<-sim(b)
 lines(th.seq,info.2,col='green')
 ##
-##
-b<-rnorm(ni,mean=0,sd=3)
+b<-rnorm(ni,mean=0,sd=2)
 info.3<-sim(b)
 lines(th.seq,info.3,col='blue')
+##
+b<-rnorm(ni,mean=0,sd=1)
+info.3<-sim(b,a=.75)
+lines(th.seq,info.3,col='pink',lwd=4)
