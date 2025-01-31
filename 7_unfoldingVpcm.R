@@ -69,7 +69,7 @@ z<-do.call("rbind",out)
 
 plot(log10(z[,1]),z[,3],pch=19,col='red',ylim=c(0,max(z[,3])),xlab='log10(N)',ylab='rmse for location')
 points(log10(z[,1]),z[,2],pch=19)
-
+legend("topright",fill=c("black","red"),c("pcm","andrich"))
 
 
 
