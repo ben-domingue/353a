@@ -43,7 +43,7 @@ for (i in 1:length(deltaL)) {
 }
 est<-do.call("rbind",est)
 
-par(mfrow=c(1,2))
+par(mfrow=c(1,3))
 plot(deltaL,est[,1]) #looks good!
 plot(rhoL,est[,2]) #what is going on here?
 
