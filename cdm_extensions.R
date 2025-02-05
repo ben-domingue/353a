@@ -29,3 +29,12 @@ Q<-frac20$Q
 for (i in 5:8) Q[,i]<-rbinom(nrow(Q),1,mean(Q[,i],na.rm=TRUE))
 m2 <- GDINA(frac20$dat,Q,model="DINA")
 anova(m,m2)
+
+Q<-frac20$Q
+c<-cor(Q)
+max(c[upper.tri(c,diag=FALSE)])
+zz<-(Q[,2]+Q[,5])/2
+Q[,2]<-ifelse(zz>=.5,1,0)
+Q<-Q[,-5]
+m2 <- GDINA(frac20$dat,Q,model="DINA")
+anova(m,m2)
