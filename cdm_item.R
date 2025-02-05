@@ -5,11 +5,15 @@ frac20$dat
 frac20$Q
 m <- GDINA(frac20$dat,frac20$Q,model="DINA")
 
-##we're going to look at the item parameters (for first three items) from two slightly different perspectives. make sure you can make sense of these two perspectives
-coef(m)[1:3]
+##item parameters
 co<-coef(m,what='delta')
 co<-do.call("rbind",co)
-co[1:3,]
+co[1:3,] ##here are the 'delta' parameters, see 'alt formulation' on slide with heading 'The DINA model: One example of skills -> knowledge states'
+##can you compute the guessing and slip parameters for these items?
 
-plot(data.frame(cbind(colMeans(frac20$dat),co)))
+##here is a different version of item parameters. can you map what you are seeing here onto what we just looked at?
+coef(m)[1:3]
+
+##now let's look at the item parameters as compared to the item p-values (average proportion correct for each item)
+plot(data.frame(pvalue=colMeans(frac20$dat),guess=co[,1],`one.minus.slip`=rowSums(co)))
 
