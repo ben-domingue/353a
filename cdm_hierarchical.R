@@ -9,4 +9,6 @@ Q <- sim10GDINA$simQ
                                         # --- Higher order G-DINA model ---#
 mod12 <- GDINA(dat = dat, Q = Q, model = "DINA",
                att.dist="higher.order",higher.order=list(nquad=31,model = "2PL"))
-personparm(mod12,"HO") # higher-order ability
+th<-personparm(mod12,"HO") # higher-order ability
+map<-personparm(mod12,"MAP")
+cor(data.frame(th=th[,1],map[,1:3])) ##what do you think?

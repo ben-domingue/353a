@@ -4,6 +4,7 @@ library(GDINA)
 frac20$dat
 frac20$Q
 m <- GDINA(frac20$dat,frac20$Q,model="DINA")
+summary(m) #peruse the output
 
 ##item parameters
 co<-coef(m,what='delta')
