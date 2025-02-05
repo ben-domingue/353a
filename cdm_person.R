@@ -4,17 +4,11 @@ library(GDINA)
 frac20$dat
 frac20$Q
 m <- GDINA(frac20$dat,frac20$Q,model="DINA")
-coef(m)
-frac20$Q #make sure you can make sense of this relative to the above line, coef(m)
-
-coef(m,'lambda')
-
-co<-coef(m,what='delta')
-co<-do.call("rbind",co)
-plot(data.frame(cbind(colMeans(frac20$dat),co)))
 
 map <- personparm(m, what = "MAP")
 map[1:5,]
+
+coef(m,'lambda')
 
 #sum scores and proportions of attributes
 rs<-rowSums(frac20$dat)
@@ -42,10 +36,4 @@ for (ii in 1:2) {
     abline(0,1)
 } #so we see good agreement! obviously, estimating the delta values is easy *if* you know the map values. but, of course, getting those is the hard part! 
 
-#nonsense Q
-set.seed(10103101)
-Q<-frac20$Q
-for (i in 5:8) Q[,i]<-rbinom(nrow(Q),1,mean(Q[,i],na.rm=TRUE))
-m2 <- GDINA(frac20$dat,Q,model="DINA")
-anova(m,m2)
 
