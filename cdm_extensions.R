@@ -30,6 +30,7 @@ for (i in 5:8) Q[,i]<-rbinom(nrow(Q),1,mean(Q[,i],na.rm=TRUE))
 m2 <- GDINA(frac20$dat,Q,model="DINA")
 anova(m,m2)
 
+##that was perhaps too much. what if we just collapsed the most similar attributes? 
 Q<-frac20$Q
 c<-cor(Q)
 max(c[upper.tri(c,diag=FALSE)])
