@@ -24,7 +24,7 @@ coef(m)
 coef(m,what='lambda')
 
 co<-coef(m,what='delta')
-co<-do.call("rbind",co)
+co<-do.call("rbind",co) #what do you notice about these values relative to what we saw for the frac20 data?
 plot(data.frame(cbind(b,co)))
 
 map <- personparm(m, what = "MAP")
