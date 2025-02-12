@@ -1,4 +1,4 @@
-source("00funs.R") ##https://github.com/AnyaWMa/IRW-Qmatrix/blob/main/bd/00funs.R
+source("00funs.R") ##https://github.com/ben-domingue/353a/blob/main/00funs.R
 
 
 ################################3
