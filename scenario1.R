@@ -1,5 +1,9 @@
 source("00funs.R") ##https://github.com/ben-domingue/353a/blob/main/00funs.R
 
+##you'll need to also install irwpkg & imv:
+remotes::install_github("hansorlee/irwpkg")
+devtools::install_github("ben-domingue/imv", ref="main")
+
 
 ################################3
 ##simulate data with naughty cdm
