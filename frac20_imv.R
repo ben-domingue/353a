@@ -1,10 +1,13 @@
 source("00funs.R") #https://github.com/AnyaWMa/IRW-Qmatrix/blob/main/bd/00funs.R
+##you'll need to also install irwpkg & imv:
+remotes::install_github("hansorlee/irwpkg")
+devtools::install_github("ben-domingue/imv", ref="main")
 
 #########################irw
 
 f<-function(tab) {
     df$resp <- as.numeric(df$resp)  # Ensure the response variable is numeric
-    resp<-irw::long2resp(df)
+    resp<-irwpkg::irw_long2resp(df)
     resp$id<-NULL
     makeqm<-function(df,resp=NULL) { #resp required for correct ordering
         ii<-grep("Qmatrix__",names(df))
