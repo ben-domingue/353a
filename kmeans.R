@@ -1,6 +1,6 @@
 N<-1000
 mu<-c(-1,0,1,2)
-sigma<- 1
+sigma<- .5
 x<-list()
 for (i in 1:length(mu)) x[[i]]<-rnorm(N,mean=mu[i],sd=sigma)
 x<-unlist(x) ##no group information!
