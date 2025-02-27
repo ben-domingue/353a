@@ -10,6 +10,9 @@ linmap <- cbind(c(0, 1, 1), c(NA, 0, 1))
 linrespT <- dendrify(linresp, linmap)
 
 
+
+
+
 # The multidimensional model for linear response trees
 (M1linTree <- glmer(value ~ 0 + item:node + (0 + node | person), 
   family = binomial, data = linrespT))
@@ -19,13 +22,13 @@ ranef(M1linTree)
 (M2linTree <- glmer(value ~ 0 + item:node + (1 | person), 
   family = binomial, data = linrespT))
 
-# The unidimensional rating scale model for linear response trees
-(M3linTree <- glmer(value ~ 0 + item + node + (1 | person), 
-  family = binomial, data = linrespT))
+## # The unidimensional rating scale model for linear response trees
+## (M3linTree <- glmer(value ~ 0 + item + node + (1 | person), 
+##   family = binomial, data = linrespT))
 
-# The multidimensional random item model for linear response trees
-(M4linTree <- glmer(value ~ 1 + (0 + node | item) + (0 + node | person),
-  family = binomial, data = linrespT))
+## # The multidimensional random item model for linear response trees
+## (M4linTree <- glmer(value ~ 1 + (0 + node | item) + (0 + node | person),
+##   family = binomial, data = linrespT))
 
 
 #####################################
