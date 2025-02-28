@@ -71,10 +71,10 @@ x.nest<-merge(gr,x.nest)
 om<-numeric()
 for (fold in 1:4) {
     ## The unidimensional model for linear response trees
-    m.lin <- glmer(resp ~ 0 + item:node + (1 | id), 
+    m.lin <- glmer(resp ~ 0 + item:node + (0+node | id), 
                    family = binomial, data = x.lin[x.lin$gr!=fold,])
     ## The unidimensional model for linear response trees
-    m.nest <- glmer(resp ~ 0 + item:node + (1 | id), 
+    m.nest <- glmer(resp ~ 0 + item:node + (0+node | id), 
                     family = binomial, data = x.nest[x.nest$gr!=fold,])
 
     ##add nodes & compute category probs
@@ -175,10 +175,16 @@ for (fold in 1:4) {
 
     resp<-as.numeric(nesresp) ##not quite right, should be purely out of sample
     pctt.tab <- c()
-    for (i in 0:(length(unique(resp))-1)){
+    for (i in 0:(length(unique(resp))-1)){ #I got lazy and construct `pctt.tab` using all responses (should be OOS)
         pctt.tab <- c(pctt.tab, sum(resp == i)/length(resp))
     }
 
     om[fold]<-imv_c(y,pctt.tab,p1='mlin.',p2='mnest.')
 }
 summary(om)
+
+
+##hm?
+## > summary(om)
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -0.0085 -0.0002  0.0027  0.0003  0.0032  0.0045 

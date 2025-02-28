@@ -43,13 +43,13 @@ x$person<-NULL
 x$resp<-x$value
 x$value<-NULL
 x$bigid<-paste(x$id,x$item)
-L<-split(x,x$bigid)
-gr<-sample(1:4,length(L),replace=TRUE)
+LL<-split(x,x$bigid)
+gr<-sample(1:4,length(LL),replace=TRUE)
 
 om<-numeric()
 for (fold in 1:4) {
-    Li<-L[gr!=fold]
-    Lo<-L[gr==fold]
+    Li<-LL[gr!=fold]
+    Lo<-LL[gr==fold]
     ##
     x<-data.frame(do.call("rbind",Li))
     ## The multidimensional model for linear response trees
@@ -92,18 +92,24 @@ for (fold in 1:4) {
     }
     tab0<-f(L,'p0')
     tab1<-f(L,'p1')
-    names(tab0)<-paste("m0.",0:2,sep='')
-    names(tab1)<-paste("m1.",0:2,sep='')
+    names(tab0)<-paste("mmd.",0:2,sep='')
+    names(tab1)<-paste("mud.",0:2,sep='')
 
     resp.oos<-sapply(L,function(x) sum(x$resp,na.rm=TRUE)) #the out-of-sample responses
     y<-data.frame(resp=resp.oos,tab0,tab1)
 
     resp<-as.numeric(linresp)
     pctt.tab <- c()
-    for (i in 0:(length(unique(resp))-1)){
+    for (i in 0:(length(unique(resp))-1)){ #I got lazy and construct `pctt.tab` using all responses (should be OOS)
         pctt.tab <- c(pctt.tab, sum(resp == i)/length(resp))
     }
 
-    om[fold]<-imv_c(y,pctt.tab,p1='m0.',p2='m1.')
+    om[fold]<-imv_c(y,pctt.tab,p1='mud.',p2='mmd.')
 }
 summary(om)
+
+## > summary(om)
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.0051  0.0093  0.0108  0.0096  0.0111  0.0120 
+
+##they do indeed simulate data from a MD model, see top of page 10
