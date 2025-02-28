@@ -2,43 +2,19 @@ library("irtrees")
 library("lme4")
 library(imv) #devtools::install_github("ben-domingue/imv", ref="main")
 
-imv_c<-function(y,pctt.tab,p1,p2) {
-  nn<-length(unique(y$resp))
-  om<-numeric()
-  iis<-0:(nn-1)
-  for (ii in iis) {
-    ns<-om.tmp<-numeric()
-    jjs<-iis[-match(ii,iis)]
-    for (jj in jjs) {
-      y2<-y[y$resp %in% c(ii,jj),]
-      resp<-ifelse(y2$resp==ii,1,0)
-      ##irt p-values for being
-      p1.ii<-y2[[paste(p1,ii,sep='')]]
-      p1.jj<-y2[[paste(p1,jj,sep='')]]
-      p2.ii<-y2[[paste(p2,ii,sep='')]]
-      p2.jj<-y2[[paste(p2,jj,sep='')]]
-      ##
-      z<-data.frame(resp=resp,
-                    p1=p1.ii/(p1.ii+p1.jj),
-                    p2=p2.ii/(p2.ii+p2.jj)
-      )
-      j0<-as.character(jj)
-      om.tmp[j0]<-imv::imv.binary(z[,1],z[,2],z[,3])
-      ns[as.character(jj)]<-nrow(z)
-    }
-    om[ii+1]<-sum(om.tmp*ns)/sum(ns)
-  }
-  omega_c <- sum(om*pctt.tab)/sum(pctt.tab)
-  return(omega_c)
-}
+df<-irwpkg::irw_fetch("teq_novak_2021_selfesteem")
+irw.table<-irwpkg::irw_long2resp(df)
+irw.table$id<-NULL
+data<-as.matrix(irw.table)
 
+data<-linresp
 ################################################################################
 ##IMV for polytomous response over 1 fold
 ##nested versus linear
 
 ##nested
 nesmap <- cbind(c(0, 0, 1, 1), c(0, 1, NA, NA), c(NA, NA, 0, 1))
-x <- dendrify(nesresp, nesmap)
+x <- dendrify(data, nesmap)
 x$id<-x$person
 x$person<-NULL
 x$resp<-x$value
@@ -50,7 +26,7 @@ x.nest<-x
   
 ##linear
 linmap<-rbind(c(0,NA,NA),c(1,0,NA),c(1,1,0),c(1,1,1))
-x <- dendrify(nesresp, linmap)
+x <- dendrify(data, linmap)
 x$id<-x$person
 x$person<-NULL
 x$resp<-x$value
@@ -70,6 +46,7 @@ x.nest<-merge(gr,x.nest)
 
 om<-numeric()
 for (fold in 1:4) {
+    print(fold)
     ## The unidimensional model for linear response trees
     m.lin <- glmer(resp ~ 0 + item:node + (0+node | id), 
                    family = binomial, data = x.lin[x.lin$gr!=fold,])
@@ -173,7 +150,7 @@ for (fold in 1:4) {
     resp.oos<-sapply(L,f)
     y<-data.frame(resp=resp.oos,tab.lin,tab.nest)
 
-    resp<-as.numeric(nesresp) ##not quite right, should be purely out of sample
+    resp<-as.numeric(data) ##not quite right, should be purely out of sample
     pctt.tab <- c()
     for (i in 0:(length(unique(resp))-1)){ #I got lazy and construct `pctt.tab` using all responses (should be OOS)
         pctt.tab <- c(pctt.tab, sum(resp == i)/length(resp))
