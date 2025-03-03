@@ -39,7 +39,7 @@ imv_c<-function(y,pctt.tab,p1,p2,sigma=1e-4) {
   return(omega_c)
 }
 
-df<-irwpkg::irw_fetch("promis1wave1_cesd")
+df<-irwpkg::irw_fetch("ccapsvtskhpacr_mercedes_2023_hada")
 irw.table<-irwpkg::irw_long2resp(df)
 irw.table$id<-NULL
 rs<-rowSums(is.na(irw.table))
@@ -196,8 +196,3 @@ for (fold in 1:4) {
 }
 summary(om)
 
-
-##hm?
-## > summary(om)
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -0.0085 -0.0002  0.0027  0.0003  0.0032  0.0045 
