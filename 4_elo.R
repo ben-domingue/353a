@@ -14,7 +14,7 @@ resp<-p
 for (i in 1:ncol(p)) resp[,i]<-rbinom(nrow(p),1,p[,i])
 rs<-rowSums(resp)
 
-#each person plays M games
+#each person plays M games which are decided based on their sum scores (which are based on a theta value)
 M<-5
 N<-length(rs)
 out<-list()
