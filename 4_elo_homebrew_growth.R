@@ -30,23 +30,21 @@ Ni<-70
 xxx<-sim.growth(Np=Np,Ni=Ni,N=10000,prop.grow=.25)
 
 out<-list()
-K<-.3
-#for (K in c(.1,.3,.5)) {
-    df<-est(df=xxx,K=K)
-    ##
-    ff<-function(x) x[nrow(x),,drop=FALSE]
-    ##
-    L<-split(df,df$id)
-    x<-data.frame(do.call("rbind",lapply(L,ff)))
-    c1<-cor(x$th,x$th0)
-    e1<-rmse(x$th-x$th0)
-    ##
-    L<-split(df,df$item)
-    x<-data.frame(do.call("rbind",lapply(L,ff)))
-    c2<-cor(x$b,x$b0)
-    e2<-rmse(x$b-x$b0)
-    out[[as.character(K)]]<-c(c1,e1,c2,e2)
-                                        #}
+K<-.3 ##feel free to experiment with K
+df<-est(df=xxx,K=K)
+##
+ff<-function(x) x[nrow(x),,drop=FALSE]
+##
+L<-split(df,df$id)
+x<-data.frame(do.call("rbind",lapply(L,ff)))
+c1<-cor(x$th,x$th0)
+e1<-rmse(x$th-x$th0)
+##
+L<-split(df,df$item)
+x<-data.frame(do.call("rbind",lapply(L,ff)))
+c2<-cor(x$b,x$b0)
+e2<-rmse(x$b-x$b0)
+out[[as.character(K)]]<-c(c1,e1,c2,e2)
 
 L<-split(df,df$id)
 f<-function(x) {
@@ -58,6 +56,7 @@ f<-function(x) {
 z<-t(sapply(L,f))
 by(z[,2],z[,1],summary)
 
+##theory: error should decrease for theta estimates based on more observations
 f<-function(x) {
     n<-nrow(x)
     delta<-x$th[n]-x$th0[n]
@@ -72,9 +71,9 @@ L<-split(z,z$id)
 plot(NULL,xlim=c(1,nrow(df)),ylim=c(-3,3))
 for (i in 1:length(L)) lines(L[[i]]$t,L[[i]]$th0)
 
-##let's look at hte items
+##let's look at the items
 L<-split(df,df$item)
 plot(NULL,xlim=c(1,nrow(df)),ylim=c(-3,3))
 for (i in 1:length(L)) lines(L[[i]]$t,L[[i]]$b0)
-lm(b0~t,df) #uhoh
+lm(b0~t,df) 
 lm(th0~t,df)
