@@ -1,4 +1,4 @@
-source("https://github.com/ben-domingue/353a/blob/main/00-elofuns.R")
+source("00-elofuns.R") ##https://github.com/ben-domingue/353a/blob/main/00-elofuns.R
 
 
 sim<-function(Np,Ni,N=10000) {
