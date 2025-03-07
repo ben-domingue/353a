@@ -18,7 +18,7 @@ sim.growth<-function(Np,Ni,N,prop.grow=.25) {
     df<-merge(df,z)
     ##
     T<-max(df$t)
-    df$th<-ifelse(df$gr==1,df$th+df$t/T,df$th)
+    df$th<-ifelse(df$gr==1,df$th+df$t/T,df$th) ##here we are adding growth
     ##
     df$p<-invlogit(df$th-df$b)
     df$resp<-rbinom(nrow(df),1,df$p)
@@ -27,11 +27,11 @@ sim.growth<-function(Np,Ni,N,prop.grow=.25) {
 }
 Np<-500
 Ni<-70
-xxx<-sim.growth(Np=Np,Ni=Ni,N=10000,prop.grow=.25)
+xxx<-sim.growth(Np=Np,Ni=Ni,N=10000,prop.grow=.25) ###xxx is the simulated data
 
 out<-list()
 K<-.3 ##feel free to experiment with K
-df<-est(df=xxx,K=K)
+df<-est(df=xxx,K=K) ##df is now `est` but with estimates
 ##
 ff<-function(x) x[nrow(x),,drop=FALSE]
 ##
@@ -44,8 +44,9 @@ L<-split(df,df$item)
 x<-data.frame(do.call("rbind",lapply(L,ff)))
 c2<-cor(x$b,x$b0)
 e2<-rmse(x$b-x$b0)
-out[[as.character(K)]]<-c(c1,e1,c2,e2)
+out[[as.character(K)]]<-c(c1,e1,c2,e2) #this contains info on the quality of our esitmates. would be useful if we wanted to identify a `K` values via CV
 
+##let's look at estimates growth as a function of `gr` status
 L<-split(df,df$id)
 f<-function(x) {
     x$t<-x$t/nrow(df)
@@ -66,10 +67,6 @@ z<-t(sapply(L,f))
 S<-by(z[,2]^2,z[,1],mean)
 plot(S)
 
-z<-df[df$gr==1,]
-L<-split(z,z$id)
-plot(NULL,xlim=c(1,nrow(df)),ylim=c(-3,3))
-for (i in 1:length(L)) lines(L[[i]]$t,L[[i]]$th0)
 
 ##let's look at the items
 L<-split(df,df$item)
@@ -77,3 +74,4 @@ plot(NULL,xlim=c(1,nrow(df)),ylim=c(-3,3))
 for (i in 1:length(L)) lines(L[[i]]$t,L[[i]]$b0)
 lm(b0~t,df) 
 lm(th0~t,df)
+##we observe some degree of growth in the items. what do you make of this (esp relative to incomplete growth in the growth group)

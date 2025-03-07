@@ -47,7 +47,7 @@ sim.growth<-function(Np,Ni,N,prop.grow=.25) {
     df<-merge(df,z)
     ##
     T<-max(df$t)
-    df$th<-ifelse(df$gr==1,df$th+2*sin(2*df$t*pi/T),df$th)
+    df$th<-ifelse(df$gr==1,df$th+2*sin(2*df$t*pi/T),df$th) ##this is now much wackier
     ##
     df$p<-invlogit(df$th-df$b)
     df$resp<-rbinom(nrow(df),1,df$p)
@@ -55,6 +55,7 @@ sim.growth<-function(Np,Ni,N,prop.grow=.25) {
     df
 }
 
+set.seed(101010)
 Np<-50
 Ni<-150
 xxx<-sim.growth(Np=Np,Ni=Ni,N=20000,prop.grow=.5)
